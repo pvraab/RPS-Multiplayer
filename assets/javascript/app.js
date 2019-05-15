@@ -65,8 +65,7 @@ $(document).ready(function () {
         // Limit connections
         if (snapshot.numChildren() >= 2) {
             database.goOffline()
-        }
-        else {
+        } else {
             database.goOnline()
         }
     });
@@ -138,4 +137,156 @@ $(document).ready(function () {
         // Change the HTML Values
         $("#click-value").text(clickCounter);
     });
+
+    // Define player game variables
+    var oneChoice = null;
+    var onePicked = false;
+    var oneWins = 0;
+    var oneLosses = 0;
+    var oneTies = 0;
+
+    var twoChoice = null;
+    var twoPicked = false;
+    var twoWins = 0;
+    var twoLosses = 0;
+    var twoTies = 0;
+
+    function initGame() {
+        oneWins = 0;
+        oneLosses = 0;
+        oneTies = 0;
+        twoWins = 0;
+        twoLosses = 0;
+        twoTies = 0;
+    }
+
+    function initRound() {
+        console.log("Init Round");
+        enableOne();
+        enableTwo();
+    }
+
+    function disableOne() {
+        onePicked = true;
+        checkWellPlayed();
+        $("#rpgRadios11").attr('disabled', true);
+        $("#rpgRadios12").attr('disabled', true);
+        $("#rpgRadios13").attr('disabled', true);
+    }
+
+    function enableOne() {
+        onePicked = false;
+        $("#rpgRadios11").attr('disabled', false);
+        $("#rpgRadios12").attr('disabled', false);
+        $("#rpgRadios13").attr('disabled', false);
+    }
+
+    function disableTwo() {
+        twoPicked = true;
+        checkWellPlayed();
+        $("#rpgRadios21").attr('disabled', true);
+        $("#rpgRadios22").attr('disabled', true);
+        $("#rpgRadios23").attr('disabled', true);
+    }
+
+    function enableTwo() {
+        twoPicked = false;
+        $("#rpgRadios21").attr('disabled', false);
+        $("#rpgRadios22").attr('disabled', false);
+        $("#rpgRadios23").attr('disabled', false);
+    }
+
+    function checkWellPlayed() {
+        if (onePicked && twoPicked) {
+            if (oneChoice === "rock" && twoChoice === "rock") {
+                oneTies++;
+                twoTies++
+            } else if (oneChoice === "rock" && twoChoice === "paper") {
+                oneLosses++;
+                twoWins++
+            } else if (oneChoice === "rock" && twoChoice === "scissors") {
+                oneWins++;
+                twoLosses++
+            }
+            if (oneChoice === "paper" && twoChoice === "rock") {
+                oneWins++;
+                twoLosses++
+            } else if (oneChoice === "paper" && twoChoice === "paper") {
+                oneTies++;
+                twoTies++
+            } else if (oneChoice === "paper" && twoChoice === "scissors") {
+                oneLosses++;
+                twoWins++
+            }
+            if (oneChoice === "scissors" && twoChoice === "rock") {
+                oneLosses++;
+                twoWins++
+            } else if (oneChoice === "scissors" && twoChoice === "paper") {
+                oneWins++;
+                twoLosses++
+            } else if (oneChoice === "scissors" && twoChoice === "scissors") {
+                oneTies++;
+                twoTies++
+            }
+
+            // Update the score
+            updateScore();
+            setTimeout(initRound(), 5000);
+            initRound();
+        }
+    }
+
+    function updateScore() {
+        $("#oneWins").text(oneWins);
+        $("#oneLosses").text(oneLosses);
+        $("#oneTies").html(oneTies);
+        $("#twoWins").text(twoWins);
+        $("#twoLosses").text(twoLosses);
+        $("#twoTies").text(twoTies);
+    }
+
+    // $('input:radio[name=rpgRadios]:checked').change(function () {
+    $('.form-check-input').click(function () {
+        console.log(this);
+
+        if ($(this).attr("id") == 'rpgRadios11') {
+            oneChoice = "rock";
+            $("#playerOneImg").attr('src', './assets/images/rock.jpg');
+            disableOne();
+            console.log("Rock");
+        }
+        if ($(this).attr("id") == 'rpgRadios12') {
+            oneChoice = "paper";
+            $("#playerOneImg").attr('src', './assets/images/paper.jpg');
+            disableOne();
+            console.log("Paper");
+        }
+        if ($(this).attr("id") == 'rpgRadios13') {
+            oneChoice = "scissors";
+            $("#playerOneImg").attr('src', './assets/images/scissors.jpg');
+            disableOne();
+            console.log("Scissors");
+        }
+
+        if ($(this).attr("id") == 'rpgRadios21') {
+            twoChoice = "rock";
+            $("#playerTwoImg").attr('src', './assets/images/rock.jpg');
+            disableTwo();
+            console.log("Rock");
+        }
+        if ($(this).attr("id") == 'rpgRadios22') {
+            twoChoice = "paper";
+            $("#playerTwoImg").attr('src', './assets/images/paper.jpg');
+            disableTwo();
+            console.log("Paper");
+        }
+        if ($(this).attr("id") == 'rpgRadios23') {
+            twoChoice = "scissors";
+            $("#playerTwoImg").attr('src', './assets/images/scissors.jpg');
+            disableTwo();
+            console.log("Scissors");
+        }
+    });
+
+
 });

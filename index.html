@@ -44,7 +44,7 @@
                 <br>
             </div>
 
-            <h1>Only
+            <!-- <h1>Only
                 <span id="click-value"></span> clicks to go!!</h1>
 
             <button id="click-button">Click Me!!!!</button>
@@ -54,7 +54,7 @@
 
             <h3>
                 <span id="watchers"></span> people are watching you click! Don't let them down!</span>
-            </h3>
+            </h3> -->
 
             <!-- RPG Players -->
             <div class="row">
@@ -63,28 +63,36 @@
                 <div class="col-md-6">
 
                     <div class="card mb-4">
-                        <div class="card-header">Player 1</div>
+                        <div class="card-header">
+                            <h3>Player 1</h3>
+                            <h4>Wins: <span id="oneWins">0</span></h4>
+                            <h4>Losses: <span id="oneLosses">0</span></h4>
+                            <h4>Ties: <span id="oneTies">0</span></h4>
+                        </div>
                         <div class="card-body">
+
+                            <img class="gif gifImage card-img-top img-fluid" id="playerOneImg"
+                                src="./assets/images/playerone.jpg"></img>
 
                             <form>
                                 <div class="form-group">
 
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="rpgRadios" id="rpgRadios1"
-                                            value="option1" checked>
+                                        <input class="form-check-input" type="radio" name="rpgRadios" id="rpgRadios11"
+                                            value="option1">
                                         <label class="form-check-label" for="rpgRadios1">
                                             Rock
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="rpgRadios" id="rpgRadios2"
+                                        <input class="form-check-input" type="radio" name="rpgRadios" id="rpgRadios12"
                                             value="option2">
                                         <label class="form-check-label" for="rpgRadios2">
                                             Paper
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="rpgRadios" id="rpgRadios3"
+                                        <input class="form-check-input" type="radio" name="rpgRadios" id="rpgRadios13"
                                             value="option3">
                                         <label class="form-check-label" for="rpgRadios3">
                                             Scissors
@@ -102,28 +110,37 @@
                 <div class="col-md-6">
 
                     <div class="card mb-4">
-                        <div class="card-header">Player 2</div>
+                        <div class="card-header">
+                            <h3>Player 2</h3>
+                            <h4>Wins: <span id="twoWins">0</span></h4>
+                            <h4>Losses: <span id="twoLosses">0</span></h4>
+                            <h4>Ties: <span id="twoTies">0</span></h4>
+                        </div>
                         <div class="card-body">
+                            <!-- var gifDiv = $("<div>").addClass("col-sm-12 col-md-6 col-lg-4 d-flex align-items-stretch"); -->
+
+                            <img class="gif gifImage card-img-top img-fluid" id="playerTwoImg"
+                                src="./assets/images/playertwo.jpg"></img>
 
                             <form>
                                 <div class="form-group">
 
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="rpgRadios" id="rpgRadios1"
-                                            value="option1" checked>
+                                        <input class="form-check-input" type="radio" name="rpgRadios" id="rpgRadios21"
+                                            value="option1">
                                         <label class="form-check-label" for="rpgRadios1">
                                             Rock
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="rpgRadios" id="rpgRadios2"
+                                        <input class="form-check-input" type="radio" name="rpgRadios" id="rpgRadios22"
                                             value="option2">
                                         <label class="form-check-label" for="rpgRadios2">
                                             Paper
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="rpgRadios" id="rpgRadios3"
+                                        <input class="form-check-input" type="radio" name="rpgRadios" id="rpgRadios23"
                                             value="option3">
                                         <label class="form-check-label" for="rpgRadios3">
                                             Scissors
@@ -137,6 +154,18 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Chat Section-->
+            <section id="chat">
+                <p class="list-group-item text-center"><strong>Game Chat</strong></p>
+                <div class="d-flex">
+                    <input type="text" class="form-control" id="message" placeholder="Enter Message">
+                    <button id="chatSend" type="submit" class="btn btn-dark">Send</button>
+                </div>
+                <ul class="list-group"></ul>
+            </section>
+
+
 
         </div>
 
