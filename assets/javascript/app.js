@@ -30,6 +30,17 @@ $(document).ready(function () {
 
     // Set references to score children
     scoreRef = database.ref("/score");
+    const chatRef = database.ref('chat'); // Reference chat
+
+    // Do this on first player
+    chatRef.set({}); // If there's only one user, clear the chat history in the db
+    $('#chat').find('ul').empty(); // Clear the HTML
+
+
+    // Program variables
+    const $chatBtn = $('#chatSend');
+    const $chatInput = $('#message');
+    const $chatUl = $('#chat').find('ul');
 
     // (CRITICAL - BLOCK) //
     // connectionsRef references a specific location in our database.
@@ -160,12 +171,6 @@ $(document).ready(function () {
         twoTies = 0;
     }
 
-    function initRound() {
-        console.log("Init Round");
-        enableOne();
-        enableTwo();
-    }
-
     function disableOne() {
         onePicked = true;
         checkWellPlayed();
@@ -177,8 +182,11 @@ $(document).ready(function () {
     function enableOne() {
         onePicked = false;
         $("#rpgRadios11").attr('disabled', false);
+        $("#rpgRadios11").attr('checked', false);
         $("#rpgRadios12").attr('disabled', false);
+        $("#rpgRadios12").attr('checked', false);
         $("#rpgRadios13").attr('disabled', false);
+        $("#rpgRadios13").attr('checked', false);
     }
 
     function disableTwo() {
@@ -192,8 +200,11 @@ $(document).ready(function () {
     function enableTwo() {
         twoPicked = false;
         $("#rpgRadios21").attr('disabled', false);
+        $("#rpgRadios21").attr('checked', false);
         $("#rpgRadios22").attr('disabled', false);
+        $("#rpgRadios22").attr('checked', false);
         $("#rpgRadios23").attr('disabled', false);
+        $("#rpgRadios23").attr('checked', false);
     }
 
     function checkWellPlayed() {
@@ -231,12 +242,24 @@ $(document).ready(function () {
 
             // Update the score
             updateScore();
-            setTimeout(initRound(), 5000);
-            initRound();
+            setTimeout(myFunction, 3000);
+            setTimeout(initRound, 5000);
         }
     }
 
+    function myFunction() {
+        alert('Hello');
+    }
+
+    function initRound() {
+        console.log("Init Round");
+        $("#whoOne").text("Dont Know");
+        enableOne();
+        enableTwo();
+    }
+
     function updateScore() {
+        $("#whoOne").text("Good Time");
         $("#oneWins").text(oneWins);
         $("#oneLosses").text(oneLosses);
         $("#oneTies").html(oneTies);
@@ -251,42 +274,60 @@ $(document).ready(function () {
 
         if ($(this).attr("id") == 'rpgRadios11') {
             oneChoice = "rock";
-            $("#playerOneImg").attr('src', './assets/images/rock.jpg');
+            oneThis = $(this);
+            $("#playerOneImg").attr('src', './assets/images/rock1.jpg');
             disableOne();
             console.log("Rock");
         }
         if ($(this).attr("id") == 'rpgRadios12') {
             oneChoice = "paper";
-            $("#playerOneImg").attr('src', './assets/images/paper.jpg');
+            $("#playerOneImg").attr('src', './assets/images/paper1.jpg');
             disableOne();
             console.log("Paper");
         }
         if ($(this).attr("id") == 'rpgRadios13') {
             oneChoice = "scissors";
-            $("#playerOneImg").attr('src', './assets/images/scissors.jpg');
+            $("#playerOneImg").attr('src', './assets/images/scissors1.jpg');
             disableOne();
             console.log("Scissors");
         }
 
         if ($(this).attr("id") == 'rpgRadios21') {
             twoChoice = "rock";
-            $("#playerTwoImg").attr('src', './assets/images/rock.jpg');
+            $("#playerTwoImg").attr('src', './assets/images/rock2.jpg');
             disableTwo();
             console.log("Rock");
         }
         if ($(this).attr("id") == 'rpgRadios22') {
             twoChoice = "paper";
-            $("#playerTwoImg").attr('src', './assets/images/paper.jpg');
+            $("#playerTwoImg").attr('src', './assets/images/paper2.jpg');
             disableTwo();
             console.log("Paper");
         }
         if ($(this).attr("id") == 'rpgRadios23') {
             twoChoice = "scissors";
-            $("#playerTwoImg").attr('src', './assets/images/scissors.jpg');
+            $("#playerTwoImg").attr('src', './assets/images/scissors2.jpg');
             disableTwo();
             console.log("Scissors");
         }
     });
+
+
+    const chat = () => {
+        let leMsg = $chatInput.val(); // Get the msg from the chat input
+        chatRef.push({ // Push the message
+            msg: leMsg
+        });
+        $chatInput.val(''); // Empty input
+    }
+
+    chatRef.on('child_added', (snap) => { // Listen for changes in the chat Reference in the db
+        let msgStr = `<li class="list-group-item list-group-item-dark">${snap.val().msg}`; // Create a string with the msg
+        $chatUl.prepend(msgStr); // Prepend the msg so it's at the top
+    });
+
+    $('#chatSend').on('click', chat);
+
 
 
 });
