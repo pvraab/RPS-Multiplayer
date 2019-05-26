@@ -408,12 +408,14 @@ $(document).ready(function () {
         $("#twoTies").text(twoTies);
     }
 
+    // Manage a game choice
     // $('input:radio[name=rpgRadios]:checked').change(function () {
     $('.form-check-input').click(function () {
         console.log(this);
 
         if ($(this).attr("id") == 'rpgRadios11') {
             oneChoice = "rock";
+            setChoice(oneChoice);
             oneThis = $(this);
             $("#playerOneImg").attr('src', './assets/images/rock1.jpg');
             disableOne();
@@ -421,12 +423,14 @@ $(document).ready(function () {
         }
         if ($(this).attr("id") == 'rpgRadios12') {
             oneChoice = "paper";
+            setChoice(oneChoice);
             $("#playerOneImg").attr('src', './assets/images/paper1.jpg');
             disableOne();
             console.log("Paper");
         }
         if ($(this).attr("id") == 'rpgRadios13') {
             oneChoice = "scissors";
+            setChoice(oneChoice);
             $("#playerOneImg").attr('src', './assets/images/scissors1.jpg');
             disableOne();
             console.log("Scissors");
@@ -434,23 +438,61 @@ $(document).ready(function () {
 
         if ($(this).attr("id") == 'rpgRadios21') {
             twoChoice = "rock";
+            setChoice(twoChoice);
             $("#playerTwoImg").attr('src', './assets/images/rock2.jpg');
             disableTwo();
             console.log("Rock");
         }
         if ($(this).attr("id") == 'rpgRadios22') {
             twoChoice = "paper";
+            setChoice(twoChoice);
             $("#playerTwoImg").attr('src', './assets/images/paper2.jpg');
             disableTwo();
             console.log("Paper");
         }
         if ($(this).attr("id") == 'rpgRadios23') {
-            twoChoice = "scissors";
+            twoChoice = "scissors"
+            setChoice(twoChoice);
             $("#playerTwoImg").attr('src', './assets/images/scissors2.jpg');
             disableTwo();
             console.log("Scissors");
         }
     });
+
+    function setChoice(choice) {
+
+        // Get the current player data
+        // and update the choice
+        p1Ref.once('value', function (snapshot) {
+            // Store everything into a variable.
+            var oldChoice = snapshot.val().choice;
+            var name = snapshot.val().name;
+            var wins = snapshot.val().wins;
+            var losses = snapshot.val().losses;
+            var ties = snapshot.val().ties;
+
+            if (playerNum === 1) {
+                var p1 = {
+                    choice: choice,
+                    name: name,
+                    wins: wins,
+                    losses: losses,
+                    ties: ties
+                };
+                p1Ref.set(p1);
+            } else {
+                var p2 = {
+                    choice: choice,
+                    name: name,
+                    wins: wins,
+                    losses: losses,
+                    ties: ties
+                };
+                p2Ref.set(p2);
+            }
+        });
+
+    }
 
     // Handle either user entering a chat message
     // Push to the databaase which will then trigger the "child_added" event
