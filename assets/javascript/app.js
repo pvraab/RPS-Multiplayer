@@ -98,6 +98,9 @@ $(document).ready(function () {
 
             playerNum = 1;
 
+            enableOne();
+            disableTwo();
+
             $("#startGame").modal();
 
             // Create the object
@@ -137,7 +140,11 @@ $(document).ready(function () {
             $("#players").text(1);
 
         } else if (snap.numChildren() === 2 && firstTime) {
+
             playerNum = 2;
+
+            disableOne();
+            enableTwo();
 
             $("#startGame").modal();
 
@@ -178,7 +185,11 @@ $(document).ready(function () {
             $("#players").text(2);
 
         } else if (snap.numChildren() > 2) {
+
             playerNum = -1;
+
+            disableOne();
+            disableTwo();
 
             // Get current number of watchers and set to numChildren - 2
             database.ref("/watchers").once('value', function (snapshot) {
@@ -276,6 +287,9 @@ $(document).ready(function () {
 
     var resultsText = "";
 
+    initGame();
+    initRound();
+
     function initGame() {
         oneWins = 0;
         oneLosses = 0;
@@ -285,16 +299,29 @@ $(document).ready(function () {
         twoTies = 0;
     }
 
-    function disableOne() {
+    function initRound() {
+        console.log("Init Round");
+        $("#results").text("Waiting for next round");
+        disableOne();
+        disableTwo();
+    }
+
+    function isDone() {
         onePicked = true;
+        onePicked = false;
+        twoPicked = true;
+        twoPicked = false;
+
         checkWellPlayed();
+    }
+
+    function disableOne() {
         $("#rpgRadios11").attr('disabled', true);
         $("#rpgRadios12").attr('disabled', true);
         $("#rpgRadios13").attr('disabled', true);
     }
 
     function enableOne() {
-        onePicked = false;
         $("#rpgRadios11").attr('disabled', false);
         $("#rpgRadios11").attr('checked', false);
         $("#rpgRadios12").attr('disabled', false);
@@ -304,15 +331,12 @@ $(document).ready(function () {
     }
 
     function disableTwo() {
-        twoPicked = true;
-        checkWellPlayed();
         $("#rpgRadios21").attr('disabled', true);
         $("#rpgRadios22").attr('disabled', true);
         $("#rpgRadios23").attr('disabled', true);
     }
 
     function enableTwo() {
-        twoPicked = false;
         $("#rpgRadios21").attr('disabled', false);
         $("#rpgRadios21").attr('checked', false);
         $("#rpgRadios22").attr('disabled', false);
@@ -372,13 +396,6 @@ $(document).ready(function () {
 
     function myFunction() {
         alert('Hello');
-    }
-
-    function initRound() {
-        console.log("Init Round");
-        $("#whoOne").text("Dont Know");
-        enableOne();
-        enableTwo();
     }
 
     function updateScore() {
