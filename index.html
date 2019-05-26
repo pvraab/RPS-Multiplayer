@@ -39,25 +39,11 @@
             <!-- Jumbotron -->
             <div class="jumbotron">
                 <h1 class="text-center">RPS Multiplayer</h1>
-                <br>
                 <h4 class="text-center">Have Some Fun!</h4>
+                <h4 class="text-center"><span id="players">0</span><span id=playerText> people are playing!</span></h4>
+                <h4 class="text-center"><span id="watchers">0</span><span id=watcherText> people are watching!</span></h4>
+                <h4 class="text-center"><span id=results>Waiting for Players</span></h4>
                 <br>
-            </div>
-
-            <!-- <h1>Only
-                <span id="click-value"></span> clicks to go!!</h1>
-
-            <button id="click-button">Click Me!!!!</button>
-            <button id="restart-button">Restart</button>
-
-            <hr>
-
-            <h3>
-                <span id="watchers"></span> people are watching you click! Don't let them down!</span>
-            </h3> -->
-
-            <div id="banner">
-                <span id="whoWon">Who Won</span>
             </div>
 
             <!-- RPG Players -->
@@ -67,8 +53,8 @@
                 <div class="col-md-6">
 
                     <div class="card mb-4">
-                        <div class="card-header">
-                            <h3>Player 1</h3>
+                        <div class="card-header" id="player1Header">
+                            <h3>Player 1 <span id="player1Name"></span></h3>
                             <h4>Wins: <span id="oneWins">0</span></h4>
                             <h4>Losses: <span id="oneLosses">0</span></h4>
                             <h4>Ties: <span id="oneTies">0</span></h4>
@@ -114,8 +100,8 @@
                 <div class="col-md-6">
 
                     <div class="card mb-4">
-                        <div class="card-header">
-                            <h3>Player 2</h3>
+                        <div class="card-header" id="player2Header">
+                            <h3>Player 2 <span id="player2Name"></span></h3>
                             <h4>Wins: <span id="twoWins">0</span></h4>
                             <h4>Losses: <span id="twoLosses">0</span></h4>
                             <h4>Ties: <span id="twoTies">0</span></h4>
@@ -169,6 +155,36 @@
                 <ul class="list-group"></ul>
             </section>
 
+            <!-- Modal Start -->
+            <div class="modal fade" id="startGame" tabindex="-1" role="dialog" aria-labelledby="startGameLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-center" id="startGameLabel">[R]ock [P]aper [S]cissors</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="instructions" class="bg-light modal-body">
+                            <div class="d-flex justify-content-center">
+                                <form class="modal-footer form-inline">
+                                    <label for="name" class="sr-only">Name:</label>
+                                    <input type="text" class="form-control" id="name" placeholder="Enter player's name">
+                                    <button id="lego" class="btn btn-info" type="button"
+                                        data-dismiss="modal">Enter</button>
+                                </form>
+                            </div>
+                            <br />
+                            <h3><strong>Instructions:</strong></h3>
+                            <p>This is a 2 player Rock-Paper-Scissor game. You can only start playing once there are 2
+                                players online, choose your zoombie hand and wait for the 2nd player to make their
+                                choice
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
         </div>

@@ -8,7 +8,7 @@
 $(document).ready(function () {
 
     // Open the modal on app start
-    // $('#startGame').modal('show');
+    $('#startGame').modal('show');
 
     // Initialize Firebase - user aand itinerary
     var firebaseConfig = {
@@ -25,13 +25,15 @@ $(document).ready(function () {
 
     var database = firebase.database();
 
-    // Global variables
+    // Set references to chat folder
+    const chatRef = database.ref('/chat'); // Reference chat
 
-    // Player number - if one or two is playing - if -1 is watching - if 0 - initial pass
-    var playerNum = 0;
-    var firstTime = true;
-    var numPlayers = 0;
-    var numWatchers = 0;
+    // Set references to score children
+    var scoreRef = database.ref("/score");
+
+    // Empty database itinerary
+    // var ref = database.ref("itinerary");
+    // ref.set(null);
 
     // The connectionsRef references a specific location in our database.
     // All of our connections will be stored in this directory.
@@ -42,35 +44,10 @@ $(document).ready(function () {
     // '.info/connected' is a boolean value, true if the client is connected and false if they are not.
     var connectedRef = database.ref(".info/connected");
 
-    // These are the players references
-    // Reference entire players folder
-    var playersRef = database.ref('players');
-    // Reference the p1 folder
-    var p1Ref = playersRef.child('p1');
-    // Reference the p2 folder
-    var p2Ref = playersRef.child('p2');
-
-    // const winsRef = db.ref('win');    // Reference both player losses
-    // const losesRef = db.ref('losses');    // Reference both player wins
-    // const turnRef = db.ref('turn'); // to track the turns
-
-    // Set references to chat folder
-    var chatRef = database.ref('/chat'); // Reference chat
-
-    // Set reference to watchers
-    var watchersRef = database.ref("/watchers");
-
-    // Set references to score children
-    var scoreRef = database.ref("/score");
-
-    // Empty database itinerary
-    // var ref = database.ref("itinerary");
-    // ref.set(null);
-
     // When the client's connection state changes run this function
     // Add onDisconnect().remove() to con object so connection removed from DB when dropped 
     connectedRef.on("value", function (snap) {
-        console.log("connectedRef");
+        return;
 
         // If they are connected..
         if (snap.val()) {
@@ -80,185 +57,95 @@ $(document).ready(function () {
 
             // Remove user from the connection list when they disconnect.
             con.onDisconnect().remove();
-        } else {
-
         }
     });
-
 
     // When first loaded or when the connections list changes...
-    connectionsRef.on("value", function (snap) {
-        console.log("connectionsRef - When first loaded or when the connections list changes");
-        if (snap.numChildren() === 1 && firstTime) {
+    connectionsRef.on("value", function (snapshot) {
+        console.log("When first loaded or when the connections list changes");
+        return;
 
-            // Do this on first player
-            // If there's only one user, clear the chat history in the db
-            chatRef.set({});
-            $('#chat').find('ul').empty(); // Clear the HTML
+        // Display the viewer count in the html.
+        // The number of online users is the number of children in the connections list.
+        $("#watchers").text(snapshot.numChildren());
 
-            playerNum = 1;
-
-            $("#startGame").modal();
-
-            // Create the object
-            var p1 = {
-                choice: '',
-                name: 0,
-                wins: 0,
-                losses: 0,
-                ties: 0
-            };
-
-            // Set object in DB
-            p1Ref.set(p1);
-
-            // Set current number of watchers to 0
-            numWatchers = 0;
-            var watch = {
-                watchers: numWatchers
-            };
-            watchersRef.set(watch);
-            $("#watchers").text(numWatchers);
-
-            // Not firstTime anymore
-            firstTime = false;
-            $("#players").text(1);
-            $("#player1Header").css('background-color', 'red')
-
-        } else if (snap.numChildren() === 1 && !firstTime) {
-
-            // Set current number of watchers to 0
-            numWatchers = 0;
-            var watch = {
-                watchers: numWatchers
-            };
-            watchersRef.set(watch);
-            $("#watchers").text(numWatchers);
-            $("#players").text(1);
-
-        } else if (snap.numChildren() === 2 && firstTime) {
-            playerNum = 2;
-
-            $("#startGame").modal();
-
-            // Create the object
-            var p2 = {
-                choice: '',
-                name: 0,
-                wins: 0,
-                losses: 0,
-                ties: 0
-            };
-
-            // Set object in DB
-            p2Ref.set(p2);
-
-            // Set current number of watchers to 0
-            numWatchers = 0;
-            var watch = {
-                watchers: numWatchers
-            };
-            watchersRef.set(watch);
-            $("#watchers").text(numWatchers);
-
-            // Not firstTime anymore
-            firstTime = false;
-            $("#players").text(2);
-            $("#player2Header").css('background-color', 'blue')
-
-        } else if (snap.numChildren() === 2 && !firstTime) {
-
-            // Set current number of watchers to 0
-            numWatchers = 0;
-            var watch = {
-                watchers: numWatchers
-            };
-            watchersRef.set(watch);
-            $("#watchers").text(numWatchers);
-            $("#players").text(2);
-
-        } else if (snap.numChildren() > 2) {
-            playerNum = -1;
-
-            // Get current number of watchers and set to numChildren - 2
-            database.ref("/watchers").once('value', function (snapshot) {
-                console.log("watchers");
-                console.log(snapshot.val().watchers);
-                numWatchers = parseInt(snapshot.val().watchers);
-                numWatchers = parseInt(snap.numChildren()) - 2;
-                if (numWatchers < 0) {
-                    numWatchers = 0;
-                }
-                console.log(numWatchers);
-                var watch = {
-                    watchers: numWatchers
-                };
-                watchersRef.set(watch);
-
-                $("#players").text(2);
-                $("#watchers").text(numWatchers);
-
-            });
-
-        }
-
-    });
-
-    // Get username
-    $("#lego").on('click', function () {
-        // Get the name of the user
-        var nameVal = $("#name").val();
-        // Set current playner name
-        if (playerNum === 1) {
-            $("#player1Name").html(nameVal);
-            var p1 = {
-                choice: '',
-                name: nameVal,
-                wins: 0,
-                losses: 0,
-                ties: 0
-            };
-            p1Ref.set(p1);
+        // Limit connections
+        if (snapshot.numChildren() >= 2) {
+            database.goOffline()
         } else {
-            $("#player2Name").html(nameVal);
-            var p2 = {
-                choice: '',
-                name: nameVal,
-                wins: 0,
-                losses: 0,
-                ties: 0
-            };
-            p2Ref.set(p2);
+            database.goOnline()
         }
     });
 
-    p1Ref.on("value", function (snapshot) {
-        console.log("P1")
-        console.log(snapshot);
-        var nameVal = snapshot.val().name;
-        $("#player1Name").html(nameVal);
-    });
-    p2Ref.on("value", function (snapshot) {
-        console.log("P2")
-        console.log(snapshot);
-        var nameVal = snapshot.val().name;
-        $("#player2Name").html(nameVal);
-    });
+    // -------------------------------------------------------------- (CRITICAL - BLOCK) --------------------------- //
+    // Set Initial Counter
+    var initialValue = 100;
+    var clickCounter = initialValue;
 
     // At the page load and subsequent value changes, get a snapshot of the local data.
-    // This callback allows the page to stay updated with the values in firebase node "watchers"
-    watchersRef.on("value", function (snapshot) {
-        console.log(snapshot);
+    // This callback allows the page to stay updated with the values in firebase node "clicks"
+    database.ref("/clicks").on("value", function (snapshot) {
+        if (snapshot.val() === null) {
+            return;
+        }
+
+        // Print the local data to the console.
+        console.log(snapshot.val());
+
 
         // Change the HTML to reflect the local value in firebase.
-        numWatchers = snapshot.val().watchers;
+        clickCounter = snapshot.val().clickCount;
+
+        // Log the value of the clickCounter
+        console.log(clickCounter);
 
         // Change the HTML to reflect the local value in firebase.
-        $("#watchers").text(numWatchers);
+        $("#click-value").text(clickCounter);
 
         // If any errors are experienced, log them to console.
     }, function (errorObject) {
         console.log("The read failed: " + errorObject.code);
+    });
+
+    // --------------------------------------------------------------
+
+    // Whenever a user clicks the click-button
+    $("#click-button").on("click", function () {
+
+        // Reduce the clickCounter by 1
+        clickCounter--;
+
+        // Alert User and reset the counter
+        if (clickCounter === 0) {
+            alert("Phew! You made it! That sure was a lot of clicking.");
+            clickCounter = initialValue;
+        }
+
+        // Save new value to Firebase
+        database.ref("/clicks").set({
+            clickCount: clickCounter
+        });
+
+        // Log the value of clickCounter
+        console.log(clickCounter);
+    });
+
+    // Whenever a user clicks the restart button
+    $("#restart-button").on("click", function () {
+
+        // Set the clickCounter back to initialValue
+        clickCounter = initialValue;
+
+        // Save new value to Firebase
+        database.ref("/clicks").set({
+            clickCount: clickCounter
+        });
+
+        // Log the value of clickCounter
+        console.log(clickCounter);
+
+        // Change the HTML Values
+        $("#click-value").text(clickCounter);
     });
 
     // Define player game variables
@@ -273,8 +160,6 @@ $(document).ready(function () {
     var twoWins = 0;
     var twoLosses = 0;
     var twoTies = 0;
-
-    var resultsText = "";
 
     function initGame() {
         oneWins = 0;
@@ -324,41 +209,32 @@ $(document).ready(function () {
     function checkWellPlayed() {
         if (onePicked && twoPicked) {
             if (oneChoice === "rock" && twoChoice === "rock") {
-                resultsText = "All tied!!"
                 oneTies++;
                 twoTies++
             } else if (oneChoice === "rock" && twoChoice === "paper") {
-                resultsText = "Player Two Wins!!"
                 oneLosses++;
                 twoWins++
             } else if (oneChoice === "rock" && twoChoice === "scissors") {
-                resultsText = "Player One Wins!!"
                 oneWins++;
                 twoLosses++
             }
             if (oneChoice === "paper" && twoChoice === "rock") {
-                resultsText = "Player One Wins!!"
                 oneWins++;
                 twoLosses++
             } else if (oneChoice === "paper" && twoChoice === "paper") {
-                resultsText = "All tied!!"
                 oneTies++;
                 twoTies++
             } else if (oneChoice === "paper" && twoChoice === "scissors") {
-                resultsText = "Player Two Wins!!"
                 oneLosses++;
                 twoWins++
             }
             if (oneChoice === "scissors" && twoChoice === "rock") {
-                resultsText = "Player Two Wins!!"
                 oneLosses++;
                 twoWins++
             } else if (oneChoice === "scissors" && twoChoice === "paper") {
-                resultsText = "Player One Wins!!"
                 oneWins++;
                 twoLosses++
             } else if (oneChoice === "scissors" && twoChoice === "scissors") {
-                resultsText = "All tied!!"
                 oneTies++;
                 twoTies++
             }
@@ -382,7 +258,7 @@ $(document).ready(function () {
     }
 
     function updateScore() {
-        $("#results").text(resultsText);
+        $("#whoOne").text("Good Time");
         $("#oneWins").text(oneWins);
         $("#oneLosses").text(oneLosses);
         $("#oneTies").html(oneTies);
@@ -460,5 +336,91 @@ $(document).ready(function () {
         // Prepend the msg so it's at the top
         $('#chat').find('ul').prepend(msgStr);
     });
+
+    // Get a new player
+    // Functions
+    const playerName = () => {
+        // Connected event handler
+        connectedRef.on('value', (snap) => { // Check if someone connected/disconnected
+            console.log("Connected playerName")
+            console.log(snap);
+            if (snap.val()) { // If someone connected
+                connectionsRef.push(true);
+                connectionsRef.onDisconnect().remove(); // Remove user from the connection list when they disconnect
+            }
+        });
+        // Connections folder
+        connectionsRef.on('value', (snap) => { // If I just moved someone to my connection folder
+            console.log("When first loaded or when the connections list changes");
+
+            console.log(snap);
+            console.log(`Number of players online ${snap.numChildren()}`);
+            activePnum = snap.numChildren(); // Get the number of connections at the moment
+            pNameVal = $("#name").val(); // Get the name of the user
+            $('span.playerName').html(` ${pNameVal}`); // Greet current player
+
+            if (activePnum == 1) { // If you're the 1st player
+                console.log("First player");
+
+                // Do this on first player
+                // If there's only one user, clear the chat history in the db
+                chatRef.set({});
+                $('#chat').find('ul').empty(); // Clear the HTML
+
+                p1NameVal = pNameVal; // Store the current name into a new variable to keep track inside the app
+                // Create the object
+                const p1 = {
+                    choice: '',
+                    name: p1NameVal,
+                };
+                const t = {
+                    whoseturn: turn
+                };
+
+                // Sync object
+                p1Ref.set(p1);
+                turnRef.set(t);
+
+                // Wait for player two
+                $rPanel.html('Waiting for player 2');
+                console.log('Waiting for player 2');
+
+                turn = 'p2turn';
+                turnRef.update({
+                    whoseturn: turn
+                }); // Update the turn in the db
+
+            } else if (activePnum == 2) { // If you are the 2nd player
+                p2NameVal = pNameVal; // Store the current name into a different variable to keep track
+                // Create the object
+                const p2 = {
+                    choice: '',
+                    name: p2NameVal
+                };
+                const w = {
+                    p1: p1Wins,
+                    p2: p2Wins
+                }
+                const l = {
+                    p1: p1Losses,
+                    p2: p2Losses
+                }
+                // Sync object
+                p2Ref.set(p2);
+                winsRef.set(w);
+                losesRef.set(l);
+
+                // Inform user
+                $rPanel.html('Play Now!');
+                console.log('play now');
+                turn = 'p1turn';
+                turnRef.update({
+                    whoseturn: turn
+                });
+            }
+        });
+    }
+    $("#lego").on('click', playerName);
+
 
 });
