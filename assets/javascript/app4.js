@@ -91,6 +91,7 @@ $(document).ready(function () {
         }
     });
 
+
     // When first loaded or when the connections list changes...
     connectionsRef.on("value", function (snap) {
         console.log("connectionsRef - When first loaded or when the connections list changes");
@@ -108,30 +109,17 @@ $(document).ready(function () {
 
             $("#startGame").modal();
 
-            // Init player one and two in db
+            // Create the object
             var p1 = {
                 choice: '',
-                name: ''
-            };
-            p1Ref.set(p1);
-            var p1Score = {
+                name: 0,
                 wins: 0,
                 losses: 0,
                 ties: 0
             };
-            p1ScoreRef.set(p1Score);
 
-            var p2 = {
-                choice: '',
-                name: ''
-            };
-            p2Ref.set(p2);
-            var p2Score = {
-                wins: 0,
-                losses: 0,
-                ties: 0
-            };
-            p2ScoreRef.set(p2Score);
+            // Set object in DB
+            p1Ref.set(p1);
 
             // Set current number of watchers to 0
             numWatchers = 0;
@@ -166,18 +154,17 @@ $(document).ready(function () {
 
             $("#startGame").modal();
 
-            // Init player two in db
+            // Create the object
             var p2 = {
                 choice: '',
-                name: ''
-            };
-            p2Ref.set(p2);
-            var p2Score = {
+                name: 0,
                 wins: 0,
                 losses: 0,
                 ties: 0
             };
-            p2ScoreRef.set(p2Score);
+
+            // Set object in DB
+            p2Ref.set(p2);
 
             // Set current number of watchers to 0
             numWatchers = 0;
@@ -243,28 +230,22 @@ $(document).ready(function () {
             $("#player1Name").html(nameVal);
             var p1 = {
                 choice: '',
-                name: nameVal
-            };
-            p1Ref.set(p1);
-            var p1Score = {
+                name: nameVal,
                 wins: 0,
                 losses: 0,
                 ties: 0
             };
-            p1ScoreRef.set(p1Score);
+            p1Ref.set(p1);
         } else {
             $("#player2Name").html(nameVal);
             var p2 = {
                 choice: '',
-                name: nameVal
-            };
-            p2Ref.set(p2);
-            var p2Score = {
+                name: nameVal,
                 wins: 0,
                 losses: 0,
                 ties: 0
             };
-            p2ScoreRef.set(p2Score);
+            p2Ref.set(p2);
         }
     });
 
@@ -274,6 +255,10 @@ $(document).ready(function () {
         console.log(snapshot);
         oneChoice = snapshot.val().choice;
         var nameVal = snapshot.val().name;
+        oneWins = snapshot.val().wins;
+        oneLosses = snapshot.val().losses;
+        oneTies = snapshot.val().ties;
+        updateScore();
         $("#player1Name").html(nameVal);
     });
     p2Ref.on("value", function (snapshot) {
@@ -281,31 +266,30 @@ $(document).ready(function () {
         console.log(snapshot);
         twoChoice = snapshot.val().choice;
         var nameVal = snapshot.val().name;
+        twoWins = snapshot.val().wins;
+        twoLosses = snapshot.val().losses;
+        twoTies = snapshot.val().ties;
+        updateScore();
         $("#player2Name").html(nameVal);
     });
 
     // Handle scores change
-    p1ScoreRef.on('value', function (snapshot) {
-        console.log("One wins = " + oneWins + " losses " + oneLosses + " ties " + oneTies)
-        oneWins = snapshot.val().wins;
-        oneLosses = snapshot.val().losses;
-        oneTies = snapshot.val().ties;
-        console.log("One wins = " + oneWins + " losses " + oneLosses + " ties " + oneTies)
-        writeScore();
-    });
-    p2ScoreRef.on('value', function (snapshot) {
-        console.log("Two wins = " + twoWins + " losses " + twoLosses + " ties " + twoTies)
-        twoWins = snapshot.val().wins;
-        twoLosses = snapshot.val().losses;
-        twoTies = snapshot.val().ties;
-        console.log("Two wins = " + twoWins + " losses " + twoLosses + " ties " + twoTies)
-        writeScore();
-    });
+    // p1ScoreRef.on('value', function (snapshot) {
+    //     oneWins = snapshot.val().wins;
+    //     oneLosses = snapshot.val().losses;
+    //     oneTies = snapshot.val().ties;
+    //     updateScore();
+    // });
+    // p2ScoreRef.on('value', function (snapshot) {
+    //     twoWins = snapshot.val().wins;
+    //     twoLosses = snapshot.val().losses;
+    //     twoTies = snapshot.val().ties;
+    //     updateScore();
+    // });
 
     // At the page load and subsequent value changes, get a snapshot of the local data.
     // This callback allows the page to stay updated with the values in firebase node "watchers"
     watchersRef.on("value", function (snapshot) {
-        console.log("watchers");
         console.log(snapshot);
 
         // Change the HTML to reflect the local value in firebase.
@@ -452,37 +436,42 @@ $(document).ready(function () {
     }
 
     function updateScore() {
-        p1ScoreRef.once('value', function (snapshot) {
+        p1Ref.once('value', function (snapshot) {
             // Store everything into a variable.
+            var choice = snapshot.val().choice;
+            var name = snapshot.val().name;
             var wins = snapshot.val().wins;
             var losses = snapshot.val().losses;
             var ties = snapshot.val().ties;
 
-            var p1Score = {
+            var p1 = {
+                choice: choice,
+                name: name,
                 wins: oneWins,
                 losses: oneLosses,
                 ties: oneTies
             };
-            p1ScoreRef.set(p1Score);
+            p1Ref.set(p1);
 
-            p2ScoreRef.once('value', function (snapshot) {
+            p2Ref.once('value', function (snapshot) {
                 // Store everything into a variable.
+                var choice = snapshot.val().choice;
+                var name = snapshot.val().name;
                 var wins = snapshot.val().wins;
                 var losses = snapshot.val().losses;
                 var ties = snapshot.val().ties;
 
-                var p2Score = {
+                var p2 = {
+                    choice: choice,
+                    name: name,
                     wins: twoWins,
                     losses: twoLosses,
                     ties: twoTies
                 };
-                p2ScoreRef.set(p2Score);
+                p2Ref.set(p2);
             });
-            writeScore();
         });
-    };
 
-    function writeScore() {
         $("#results").text(resultsText);
         $("#oneWins").text(oneWins);
         $("#oneLosses").text(oneLosses);
@@ -558,10 +547,16 @@ $(document).ready(function () {
                 // Store everything into a variable.
                 var oldChoice = snapshot.val().choice;
                 var name = snapshot.val().name;
+                var wins = snapshot.val().wins;
+                var losses = snapshot.val().losses;
+                var ties = snapshot.val().ties;
 
                 var p1 = {
                     choice: choice,
-                    name: name
+                    name: name,
+                    wins: wins,
+                    losses: losses,
+                    ties: ties
                 };
                 p1Ref.set(p1);
 
@@ -584,10 +579,16 @@ $(document).ready(function () {
                 // Store everything into a variable.
                 var oldChoice = snapshot.val().choice;
                 var name = snapshot.val().name;
+                var wins = snapshot.val().wins;
+                var losses = snapshot.val().losses;
+                var ties = snapshot.val().ties;
 
                 var p2 = {
                     choice: choice,
-                    name: name
+                    name: name,
+                    wins: wins,
+                    losses: losses,
+                    ties: ties
                 };
                 p2Ref.set(p2);
 

@@ -7,6 +7,7 @@
 // Wait for document to finish loading
 $(document).ready(function () {
 
+
     // Open the modal on app start
     // $('#startGame').modal('show');
 
@@ -22,6 +23,16 @@ $(document).ready(function () {
     };
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
+
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            console.log("In firebase");
+        } else {
+            console.log("In not yet");
+            setTimeout(myFunction, 5000);
+        }
+    });
+
 
     var database = firebase.database();
 
@@ -91,10 +102,19 @@ $(document).ready(function () {
         }
     });
 
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            console.log("Here");
+        }
+    });
+
     // When first loaded or when the connections list changes...
     connectionsRef.on("value", function (snap) {
         console.log("connectionsRef - When first loaded or when the connections list changes");
         if (snap.numChildren() === 1 && firstTime) {
+
+            // Set references to chat folder
+            chatRef = database.ref('/chat'); // Reference chat
 
             // Do this on first player
             // If there's only one user, clear the chat history in the db
@@ -103,35 +123,69 @@ $(document).ready(function () {
 
             playerNum = 1;
 
-            enableOne();
-            disableTwo();
+            // These are the players references
+            // Reference entire players folder
+            playersRef = database.ref('players');
+            // Set references to score children
+            scoresRef = database.ref("/scores");
 
-            $("#startGame").modal();
-
-            // Init player one and two in db
+            // Initi player one and two in db
             var p1 = {
                 choice: '',
-                name: ''
+                name: nameVal
             };
+
+            // Reference the p1 folder
+            p1Ref = playersRef.child('p1');
+
             p1Ref.set(p1);
             var p1Score = {
                 wins: 0,
                 losses: 0,
                 ties: 0
             };
+
+            // Reference the p1 folder
+            p1ScoreRef = scoresRef.child('p1');
             p1ScoreRef.set(p1Score);
 
             var p2 = {
                 choice: '',
-                name: ''
+                name: nameVal
             };
+
+            console.log("In not Waiting");
+            setTimeout(myFunction, 5000);
+
+            // Reference the p2 folder
+            p2Ref = playersRef.child('p2');
             p2Ref.set(p2);
+
             var p2Score = {
                 wins: 0,
                 losses: 0,
                 ties: 0
             };
+
+            // Reference the p2 folder
+            p2ScoreRef = scoresRef.child('p2');
             p2ScoreRef.set(p2Score);
+
+            // Set current number of watchers to 0
+            numWatchers = 0;
+            var watch = {
+                watchers: numWatchers
+            };
+
+            // Set reference to watchers
+            watchersRef = database.ref("/watchers");
+            watchersRef.set(watch);
+            $("#watchers").text(numWatchers);
+
+            enableOne();
+            disableTwo();
+
+            $("#startGame").modal();
 
             // Set current number of watchers to 0
             numWatchers = 0;
@@ -161,15 +215,11 @@ $(document).ready(function () {
 
             playerNum = 2;
 
-            disableOne();
-            enableTwo();
-
-            $("#startGame").modal();
-
-            // Init player two in db
+            // Initi player two in db
+            p1ScoreRef.set(p1Score);
             var p2 = {
                 choice: '',
-                name: ''
+                name: nameVal
             };
             p2Ref.set(p2);
             var p2Score = {
@@ -178,6 +228,19 @@ $(document).ready(function () {
                 ties: 0
             };
             p2ScoreRef.set(p2Score);
+
+            // Set current number of watchers to 0
+            numWatchers = 0;
+            var watch = {
+                watchers: numWatchers
+            };
+            watchersRef.set(watch);
+            $("#watchers").text(numWatchers);
+
+            disableOne();
+            enableTwo();
+
+            $("#startGame").modal();
 
             // Set current number of watchers to 0
             numWatchers = 0;
@@ -270,15 +333,11 @@ $(document).ready(function () {
 
     // Handle players change
     p1Ref.on("value", function (snapshot) {
-        console.log("P1")
-        console.log(snapshot);
         oneChoice = snapshot.val().choice;
         var nameVal = snapshot.val().name;
         $("#player1Name").html(nameVal);
     });
     p2Ref.on("value", function (snapshot) {
-        console.log("P2")
-        console.log(snapshot);
         twoChoice = snapshot.val().choice;
         var nameVal = snapshot.val().name;
         $("#player2Name").html(nameVal);
@@ -286,27 +345,25 @@ $(document).ready(function () {
 
     // Handle scores change
     p1ScoreRef.on('value', function (snapshot) {
-        console.log("One wins = " + oneWins + " losses " + oneLosses + " ties " + oneTies)
         oneWins = snapshot.val().wins;
         oneLosses = snapshot.val().losses;
         oneTies = snapshot.val().ties;
-        console.log("One wins = " + oneWins + " losses " + oneLosses + " ties " + oneTies)
-        writeScore();
+        updateScore();
     });
     p2ScoreRef.on('value', function (snapshot) {
-        console.log("Two wins = " + twoWins + " losses " + twoLosses + " ties " + twoTies)
         twoWins = snapshot.val().wins;
         twoLosses = snapshot.val().losses;
         twoTies = snapshot.val().ties;
-        console.log("Two wins = " + twoWins + " losses " + twoLosses + " ties " + twoTies)
-        writeScore();
+        updateScore();
     });
+
 
     // At the page load and subsequent value changes, get a snapshot of the local data.
     // This callback allows the page to stay updated with the values in firebase node "watchers"
     watchersRef.on("value", function (snapshot) {
         console.log("watchers");
         console.log(snapshot);
+        return;
 
         // Change the HTML to reflect the local value in firebase.
         numWatchers = snapshot.val().watchers;
@@ -349,8 +406,8 @@ $(document).ready(function () {
     function initRound() {
         console.log("Init Round");
         $("#results").text("Waiting for next round");
-        enableOne();
-        enableTwo();
+        disableOne();
+        disableTwo();
     }
 
     function isDone() {
@@ -442,8 +499,8 @@ $(document).ready(function () {
 
             // Update the score
             updateScore();
-            setTimeout(myFunction, 10000);
-            setTimeout(initRound, 10000);
+            setTimeout(myFunction, 3000);
+            setTimeout(initRound, 5000);
         }
     }
 
@@ -452,37 +509,7 @@ $(document).ready(function () {
     }
 
     function updateScore() {
-        p1ScoreRef.once('value', function (snapshot) {
-            // Store everything into a variable.
-            var wins = snapshot.val().wins;
-            var losses = snapshot.val().losses;
-            var ties = snapshot.val().ties;
-
-            var p1Score = {
-                wins: oneWins,
-                losses: oneLosses,
-                ties: oneTies
-            };
-            p1ScoreRef.set(p1Score);
-
-            p2ScoreRef.once('value', function (snapshot) {
-                // Store everything into a variable.
-                var wins = snapshot.val().wins;
-                var losses = snapshot.val().losses;
-                var ties = snapshot.val().ties;
-
-                var p2Score = {
-                    wins: twoWins,
-                    losses: twoLosses,
-                    ties: twoTies
-                };
-                p2ScoreRef.set(p2Score);
-            });
-            writeScore();
-        });
-    };
-
-    function writeScore() {
+	
         $("#results").text(resultsText);
         $("#oneWins").text(oneWins);
         $("#oneLosses").text(oneLosses);
