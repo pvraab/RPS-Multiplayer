@@ -351,6 +351,33 @@ $(document).ready(function () {
         $("#results").text("Waiting for next round");
         enableOne();
         enableTwo();
+        p1Ref.once('value', function (snapshot) {
+            // Store everything into a variable.
+            var oldChoice = snapshot.val().choice;
+            var name = snapshot.val().name;
+
+            var p1 = {
+                choice: "",
+                name: name
+            };
+            p1Ref.set(p1);
+
+            p2Ref.once('value', function (snapshot) {
+                // Store everything into a variable.
+                var oldChoice = snapshot.val().choice;
+                var name = snapshot.val().name;
+
+                var p2 = {
+                    choice: "",
+                    name: name
+                };
+                p2Ref.set(p2);
+            });
+
+            onePicked = false;
+            twoPicked = false;
+        });
+
     }
 
     function isDone() {
@@ -442,7 +469,7 @@ $(document).ready(function () {
 
             // Update the score
             updateScore();
-            setTimeout(myFunction, 10000);
+            // setTimeout(myFunction, 10000);
             setTimeout(initRound, 10000);
         }
     }
@@ -451,6 +478,7 @@ $(document).ready(function () {
         alert('Hello');
     }
 
+    // Update the score in the database
     function updateScore() {
         p1ScoreRef.once('value', function (snapshot) {
             // Store everything into a variable.
@@ -482,6 +510,7 @@ $(document).ready(function () {
         });
     };
 
+    // Write the score out
     function writeScore() {
         $("#results").text(resultsText);
         $("#oneWins").text(oneWins);
