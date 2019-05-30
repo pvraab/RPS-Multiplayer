@@ -349,8 +349,17 @@ $(document).ready(function () {
     function initRound() {
         console.log("Init Round");
         $("#results").text("Waiting for next round");
-        enableOne();
-        enableTwo();
+
+        if (playerNum === 1) {
+            enableOne();
+            clearTwo();
+            disableTwo();
+        } else if (playerNum === 2) {
+            enableTwo();
+            clearOne();
+            disableOne();
+        }
+
         p1Ref.once('value', function (snapshot) {
             // Store everything into a variable.
             var oldChoice = snapshot.val().choice;
@@ -389,6 +398,13 @@ $(document).ready(function () {
         checkWellPlayed();
     }
 
+    // Clear the player one radio buttons
+    function clearOne() {
+        $("#rpgRadios11").prop("checked", false);
+        $("#rpgRadios12").prop("checked", false);
+        $("#rpgRadios13").prop("checked", false);
+    }
+
     // Disable the player one radio buttons
     function disableOne() {
         $("#rpgRadios11").attr('disabled', true);
@@ -400,11 +416,18 @@ $(document).ready(function () {
     // Set them all to unchecked
     function enableOne() {
         $("#rpgRadios11").attr('disabled', false);
-        $("#rpgRadios11").attr('checked', false);
+        $("#rpgRadios11").prop("checked", false);
         $("#rpgRadios12").attr('disabled', false);
-        $("#rpgRadios12").attr('checked', false);
+        $("#rpgRadios12").prop("checked", false);
         $("#rpgRadios13").attr('disabled', false);
-        $("#rpgRadios13").attr('checked', false);
+        $("#rpgRadios13").prop("checked", false);
+    }
+
+    // Clear the player two radio buttons
+    function clearTwo() {
+        $("#rpgRadios21").prop("checked", false);
+        $("#rpgRadios22").prop("checked", false);
+        $("#rpgRadios23").prop("checked", false);
     }
 
     // Disable the player one radio buttons
@@ -418,11 +441,11 @@ $(document).ready(function () {
     // Set them all to unchecked
     function enableTwo() {
         $("#rpgRadios21").attr('disabled', false);
-        $("#rpgRadios21").attr('checked', false);
+        $("#rpgRadios21").prop("checked", false);
         $("#rpgRadios22").attr('disabled', false);
-        $("#rpgRadios22").attr('checked', false);
+        $("#rpgRadios22").prop("checked", false);
         $("#rpgRadios23").attr('disabled', false);
-        $("#rpgRadios23").attr('checked', false);
+        $("#rpgRadios23").prop("checked", false);
     }
 
     function checkWellPlayed() {
@@ -648,7 +671,6 @@ $(document).ready(function () {
         } else {
             var message = "W: " + $('#message').val();
         }
-
 
         // Push the message
         chatRef.push({
