@@ -41,168 +41,184 @@
                 <h1 class="text-center">RPS Multiplayer</h1>
                 <h4 class="text-center">Have Some Fun!</h4>
                 <h4 class="text-center"><span id="players">0</span><span id=playerText> people are playing!</span></h4>
-                <h4 class="text-center"><span id="watchers">0</span><span id=watcherText> people are watching!</span></h4>
+                <h4 class="text-center"><span id="watchers">0</span><span id=watcherText> people are watching!</span>
+                </h4>
                 <h4 class="text-center"><span id=results>Waiting for Players</span></h4>
                 <br>
             </div>
 
-            <!-- RPG Players -->
-            <div class="row">
+            <!-- Image gallery for portfolio -->
+            <!-- Use bootstrap rows and columns -->
+            <!-- Make images responsive to resize as window shrinks with class img-fluid -->
+            <div class="container-fluid bg-3 text-center">
 
-                <!-- Player 1 -->
-                <div class="col-md-6">
+                <div class="row align-items-center">
+                    <div class="col-sm-12 col-md-6 col-lg-4 d-flex align-items-stretch">
 
-                    <div class="card mb-4">
-                        <div class="card-header" id="player1Header">
-                            <h3>Player 1 <span id="player1Name"></span></h3>
-                            <h4>Wins: <span id="oneWins">0</span></h4>
-                            <h4>Losses: <span id="oneLosses">0</span></h4>
-                            <h4>Ties: <span id="oneTies">0</span></h4>
+                        <!-- Player Two card -->
+                        <div class="card gifCard">
+                            <div class="card-header" id="player1Header">
+                                <h3>Player 1 <span id="player1Name"></span></h3>
+                                <h4>Wins: <span id="oneWins">0</span></h4>
+                                <h4>Losses: <span id="oneLosses">0</span></h4>
+                                <h4>Ties: <span id="oneTies">0</span></h4>
+                            </div>
+                            <div class="card-body">
+                                <img class="gif gifImage card-img-top img-fluid" id="playerOneImg"
+                                    src="./assets/images/player1.jpg"></img>
+                                <form>
+                                    <div class="form-group">
+
+                                        <div class="form-check">
+                                            <input class="form-check-input radio1" type="radio" name="radio1"
+                                                id="rpgRadios11" value="option1">
+                                            <label class="form-check-label" for="rpgRadios11">
+                                                Rock
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input radio1" type="radio" name="radio1"
+                                                id="rpgRadios12" value="option2">
+                                            <label class="form-check-label" for="rpgRadios12">
+                                                Paper
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input radio1" type="radio" name="radio1"
+                                                id="rpgRadios13" value="option3">
+                                            <label class="form-check-label" for="rpgRadios13">
+                                                Scissors
+                                            </label>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+
                         </div>
-                        <div class="card-body">
-
-                            <img class="gif gifImage card-img-top img-fluid" id="playerOneImg"
-                                src="./assets/images/player1.jpg"></img>
-
-                            <form>
-                                <div class="form-group">
-
-                                    <div class="form-check">
-                                        <input class="form-check-input radio1" type="radio" name="radio1" id="rpgRadios11"
-                                            value="option1">
-                                        <label class="form-check-label" for="rpgRadios11">
-                                            Rock
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input radio1" type="radio" name="radio1" id="rpgRadios12"
-                                            value="option2">
-                                        <label class="form-check-label" for="rpgRadios12">
-                                            Paper
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input radio1" type="radio" name="radio1" id="rpgRadios13"
-                                            value="option3">
-                                        <label class="form-check-label" for="rpgRadios13">
-                                            Scissors
-                                        </label>
-                                    </div>
-                                </div>
-                            </form>
-
-                        </div>
-
                     </div>
-                </div>
 
-                <!-- Player 2 -->
-                <div class="col-md-6">
+                    <!-- Chat card -->
+                    <div class="col-sm-12 col-md-6 col-lg-4 d-flex align-items-stretch">
+                        <div class="card gifCard">
+                            <div class="card-header" id="player2Header">
+                                <p class="list-group-item text-center"><strong>Game Chat</strong></p>
+                            </div>
+                            
+                            <div class="card-body">
 
-                    <div class="card mb-4">
-                        <div class="card-header" id="player2Header">
-                            <h3>Player 2 <span id="player2Name"></span></h3>
-                            <h4>Wins: <span id="twoWins">0</span></h4>
-                            <h4>Losses: <span id="twoLosses">0</span></h4>
-                            <h4>Ties: <span id="twoTies">0</span></h4>
-                        </div>
-                        <div class="card-body">
-                            <!-- var gifDiv = $("<div>").addClass("col-sm-12 col-md-6 col-lg-4 d-flex align-items-stretch"); -->
-
-                            <img class="gif gifImage card-img-top img-fluid" id="playerTwoImg"
-                                src="./assets/images/player2.jpg"></img>
-
-                            <form>
-                                <div class="form-group">
-
-                                    <div class="form-check">
-                                        <input class="form-check-input radio2" type="radio" name="radio2" id="rpgRadios21"
-                                            value="option1">
-                                        <label class="form-check-label" for="rpgRadios21">
-                                            Rock
-                                        </label>
+                                <section id="chat">
+                                    <div class="d-flex">
+                                        <input type="text" class="form-control" id="message"
+                                            placeholder="Enter Message">
+                                        <button id="chatSend" type="submit" class="btn btn-dark">Send</button>
                                     </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input radio2" type="radio" name="radio2" id="rpgRadios22"
-                                            value="option2">
-                                        <label class="form-check-label" for="rpgRadios22">
-                                            Paper
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input radio2" type="radio" name="radio2" id="rpgRadios23"
-                                            value="option3">
-                                        <label class="form-check-label" for="rpgRadios23">
-                                            Scissors
-                                        </label>
-                                    </div>
-                                </div>
-                            </form>
+                                    <ul class="list-group"></ul>
+                                </section>
+                            </div>
 
                         </div>
-
                     </div>
-                </div>
-            </div>
 
-            <!-- Chat Section-->
-            <section id="chat">
-                <p class="list-group-item text-center"><strong>Game Chat</strong></p>
-                <div class="d-flex">
-                    <input type="text" class="form-control" id="message" placeholder="Enter Message">
-                    <button id="chatSend" type="submit" class="btn btn-dark">Send</button>
-                </div>
-                <ul class="list-group"></ul>
-            </section>
+                    <!-- Player Two card -->
+                    <div class="col-sm-12 col-md-6 col-lg-4 d-flex align-items-stretch">
+                        <div class="card gifCard">
+                            <div class="card-header" id="player2Header">
+                                <h3>Player 2 <span id="player2Name"></span></h3>
+                                <h4>Wins: <span id="twoWins">0</span></h4>
+                                <h4>Losses: <span id="twoLosses">0</span></h4>
+                                <h4>Ties: <span id="twoTies">0</span></h4>
+                            </div>
+                            <div class="card-body">
+                                <img class="gif gifImage card-img-top img-fluid" id="playerTwoImg"
+                                    src="./assets/images/player2.jpg"></img>
+                                <form>
+                                    <div class="form-group">
 
-            <!-- Modal Start -->
-            <div class="modal fade" id="startGame" tabindex="-1" role="dialog" aria-labelledby="startGameLabel"
-                aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title text-center" id="startGameLabel">[R]ock [P]aper [S]cissors</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div id="instructions" class="bg-light modal-body">
-                            <div class="d-flex justify-content-center">
-                                <form class="modal-footer form-inline">
-                                    <label for="name" class="sr-only">Name:</label>
-                                    <input type="text" class="form-control" id="name" placeholder="Enter player's name">
-                                    <button id="lego" class="btn btn-info" type="button"
-                                        data-dismiss="modal">Enter</button>
+                                        <div class="form-check">
+                                            <input class="form-check-input radio2" type="radio" name="radio2"
+                                                id="rpgRadios21" value="option1">
+                                            <label class="form-check-label" for="rpgRadios21">
+                                                Rock
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input radio2" type="radio" name="radio2"
+                                                id="rpgRadios22" value="option2">
+                                            <label class="form-check-label" for="rpgRadios22">
+                                                Paper
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input radio2" type="radio" name="radio2"
+                                                id="rpgRadios23" value="option3">
+                                            <label class="form-check-label" for="rpgRadios23">
+                                                Scissors
+                                            </label>
+                                        </div>
+                                    </div>
                                 </form>
                             </div>
-                            <br />
-                            <h3><strong>Instructions:</strong></h3>
-                            <p>This is a 2 player Rock-Paper-Scissor game. You can only start playing once there are 2
-                                players online, choose your zoombie hand and wait for the 2nd player to make their
-                                choice
-                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- Modal Start -->
+                <div class="modal fade" id="startGame" tabindex="-1" role="dialog" aria-labelledby="startGameLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-center" id="startGameLabel">[R]ock [P]aper
+                                    [S]cissors
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div id="instructions" class="bg-light modal-body">
+                                <div class="d-flex justify-content-center">
+                                    <form class="modal-footer form-inline">
+                                        <label for="name" class="sr-only">Name:</label>
+                                        <input type="text" class="form-control" id="name"
+                                            placeholder="Enter player's name">
+                                        <button id="lego" class="btn btn-info" type="button"
+                                            data-dismiss="modal">Enter</button>
+                                    </form>
+                                </div>
+                                <br />
+                                <h3><strong>Instructions:</strong></h3>
+                                <p>This is a 2 player Rock-Paper-Scissor game. You can only start playing once
+                                    there
+                                    are 2
+                                    players online, choose your zoombie hand and wait for the 2nd player to make
+                                    their
+                                    choice
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
+
+            </div>
 
         </div>
 
-    </div>
+        <!-- Bootstrap scripts -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-    <!-- Bootstrap scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <!-- Firebase Reference -->
+        <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
 
-    <!-- Firebase Reference -->
-    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+        <!-- Moment.js Reference -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 
-    <!-- Moment.js Reference -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-
-    <!-- Local app javascript -->
-    <script src="./assets/javascript/app.js"></script>
+        <!-- Local app javascript -->
+        <script src="./assets/javascript/app.js"></script>
 
 </body>
 

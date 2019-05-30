@@ -7,8 +7,8 @@
 // Wait for document to finish loading
 $(document).ready(function () {
 
-    // Open the modal on app start
-    // $('#startGame').modal('show');
+    // Add tooltip capability
+    $('[data-toggle="tooltip"]').tooltip();
 
     // Initialize Firebase - user aand itinerary
     var firebaseConfig = {
@@ -641,7 +641,14 @@ $(document).ready(function () {
     // where we will handle updating the chat window
     const chat = () => {
         // Get the message from the chat input window
-        var message = $('#message').val();
+        if (playerNum === 1) {
+            var message = "P1: " + $('#message').val();
+        } else if (playerNum === 2) {
+            var message = "P2: " + $('#message').val();
+        } else {
+            var message = "W: " + $('#message').val();
+        }
+
 
         // Push the message
         chatRef.push({
